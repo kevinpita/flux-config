@@ -15,9 +15,9 @@ Pruning is enabled. Removing a managed resource from this configuration also rem
 
 ## Applications
 
-Each file in `clusters/fium/apps` holds one application: a `GitRepository` for the application repository and a `HelmRelease` that installs its `infra/chart`. Flux applies chart changes from every commit on the application's `main` branch.
+Each file in `clusters/fium/apps` holds one application: an `OCIRepository` for the application's Helm chart in GHCR and a `HelmRelease` that installs it.
 
-The `HelmRelease` values select the deployed image. An image push alone does not deploy it. To deploy another build, change `image.tag` in the application file and publish the change to `main`. Keep the tag quoted, because a short commit SHA can contain only digits.
+The application's CI publishes an image and a chart with the same version on every push to its `main` branch. The `OCIRepository` follows the highest chart version, and the chart deploys the image of its own version. A new build therefore deploys without a change in this repository. To roll back, replace `semver: "*"` in the `OCIRepository` with an earlier version, for example `semver: "0.1.3"`.
 
 Drift detection is enabled. Flux reverts manual changes to the resources of a chart on the next reconciliation.
 
