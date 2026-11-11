@@ -1,0 +1,37 @@
+---
+apiVersion: source.toolkit.fluxcd.io/v1
+kind: GitRepository
+metadata:
+  name: reelrelay
+  namespace: flux-system
+spec:
+  interval: 1m0s
+  ref:
+    branch: main
+  url: https://github.com/kevinpita/reelrelay.git
+---
+apiVersion: helm.toolkit.fluxcd.io/v2
+kind: HelmRelease
+metadata:
+  name: reelrelay
+  namespace: flux-system
+spec:
+  interval: 10m0s
+  # The Deployment name and its immutable selector come from this name.
+  releaseName: reel-relay
+  targetNamespace: reelrelay
+  install:
+    createNamespace: true
+  chart:
+    spec:
+      chart: ./infra/chart
+      reconcileStrategy: Revision
+      sourceRef:
+        kind: GitRepository
+        name: reelrelay
+  values:
+    image:
+      tag: "4481bc4d"
+    openbao:
+      enabled: true
+    tmpSizeLimit: 2Gi

@@ -1,0 +1,39 @@
+---
+apiVersion: source.toolkit.fluxcd.io/v1
+kind: GitRepository
+metadata:
+  name: gasolinerabot
+  namespace: flux-system
+spec:
+  interval: 1m0s
+  ref:
+    branch: main
+  url: https://github.com/kevinpita/gasolinerabot.git
+---
+apiVersion: helm.toolkit.fluxcd.io/v2
+kind: HelmRelease
+metadata:
+  name: gasolinerabot
+  namespace: flux-system
+spec:
+  interval: 10m0s
+  releaseName: gasolinerabot
+  targetNamespace: gasolinerabot
+  install:
+    createNamespace: true
+  chart:
+    spec:
+      chart: ./infra/chart
+      reconcileStrategy: Revision
+      sourceRef:
+        kind: GitRepository
+        name: gasolinerabot
+  values:
+    deployment:
+      enabled: true
+    image:
+      tag: "803b7da1"
+    openbao:
+      enabled: true
+    postgresql:
+      enabled: true

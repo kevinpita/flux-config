@@ -13,6 +13,14 @@ The cluster directory includes the Flux controllers and these two resources, so 
 
 Pruning is enabled. Removing a managed resource from this configuration also removes it from the cluster.
 
+## Applications
+
+Each file in `clusters/fium/apps` holds one application: a `GitRepository` for the application repository and a `HelmRelease` that installs its `infra/chart`. Flux applies chart changes from every commit on the application's `main` branch.
+
+The `HelmRelease` values select the deployed image. An image push alone does not deploy it. To deploy another build, change `image.tag` in the application file and publish the change to `main`. Keep the tag quoted, because a short commit SHA can contain only digits.
+
+Removing an application file uninstalls its Helm release.
+
 Application credentials are managed through OpenBao and External Secrets. Git contains configuration and Secret references, while credential values remain outside the repository.
 
 ## Repository layout
@@ -21,11 +29,13 @@ All cluster configuration lives under `clusters/fium`:
 
 | File | Purpose |
 | --- | --- |
-| `kustomization.yaml` | Cluster entry point. Includes the `flux-system` directory. |
+| `kustomization.yaml` | Cluster entry point. Includes the `flux-system` and `apps` directories. |
 | `flux-system/kustomization.yaml` | Lists the Flux manifests to apply. |
 | `flux-system/flux-components.yaml` | Generated Flux v2.10.0 controllers, CRDs, RBAC, and network policies. |
 | `flux-system/repo.yaml` | Git source URL, branch, and polling interval. |
 | `flux-system/reconciliation.yaml` | Reconciliation path, interval, and pruning settings. |
+| `apps/kustomization.yaml` | Lists the application files to apply. |
+| `apps/<name>.yaml` | Chart source and Helm release of one application. |
 
 ## Check the deployment
 
