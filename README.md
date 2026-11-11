@@ -19,6 +19,8 @@ Each file in `clusters/fium/apps` holds one application: a `GitRepository` for t
 
 The `HelmRelease` values select the deployed image. An image push alone does not deploy it. To deploy another build, change `image.tag` in the application file and publish the change to `main`. Keep the tag quoted, because a short commit SHA can contain only digits.
 
+Drift detection is enabled. Flux reverts manual changes to the resources of a chart on the next reconciliation.
+
 Removing an application file uninstalls its Helm release.
 
 Application credentials are managed through OpenBao and External Secrets. Git contains configuration and Secret references, while credential values remain outside the repository.

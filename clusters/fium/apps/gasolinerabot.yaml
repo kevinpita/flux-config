@@ -21,6 +21,8 @@ spec:
   targetNamespace: gasolinerabot
   install:
     createNamespace: true
+  driftDetection:
+    mode: enabled
   chart:
     spec:
       chart: ./infra/chart
