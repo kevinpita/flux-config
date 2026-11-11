@@ -1,14 +1,18 @@
 ---
 apiVersion: source.toolkit.fluxcd.io/v1
-kind: GitRepository
+kind: OCIRepository
 metadata:
   name: gasolinerabot
   namespace: flux-system
 spec:
   interval: 1m0s
+  url: oci://ghcr.io/kevinpita/charts/gasolinerabot
+  # Highest published version. Pin a version here to roll back.
   ref:
-    branch: main
-  url: https://github.com/kevinpita/gasolinerabot.git
+    semver: "*"
+  layerSelector:
+    mediaType: application/vnd.cncf.helm.chart.content.v1.tar+gzip
+    operation: copy
 ---
 apiVersion: helm.toolkit.fluxcd.io/v2
 kind: HelmRelease
@@ -23,18 +27,12 @@ spec:
     createNamespace: true
   driftDetection:
     mode: enabled
-  chart:
-    spec:
-      chart: ./infra/chart
-      reconcileStrategy: Revision
-      sourceRef:
-        kind: GitRepository
-        name: gasolinerabot
+  chartRef:
+    kind: OCIRepository
+    name: gasolinerabot
   values:
     deployment:
       enabled: true
-    image:
-      tag: "803b7da1"
     openbao:
       enabled: true
     postgresql:
