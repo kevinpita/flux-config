@@ -19,6 +19,8 @@ Each file in `clusters/fium/apps` holds one application: an `OCIRepository` for 
 
 The application's CI publishes an image and a chart with the same version on every push to its `main` branch. The `OCIRepository` follows the highest chart version, and the chart deploys the image of its own version. A new build therefore deploys without a change in this repository. To roll back, replace `semver: "*"` in the `OCIRepository` with an earlier version, for example `semver: "0.1.3"`.
 
+`nec850` is different in two points. Its packages are private, so its `OCIRepository` reads the Secret `nec850-ghcr`, which is created by hand and is not in Git. It publishes Kustomize manifests and not a chart, so a Flux `Kustomization` applies them.
+
 Drift detection is enabled. Flux reverts manual changes to the resources of a chart on the next reconciliation.
 
 Removing an application file uninstalls its Helm release.
