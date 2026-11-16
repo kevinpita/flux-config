@@ -1,0 +1,35 @@
+---
+apiVersion: source.toolkit.fluxcd.io/v1
+kind: OCIRepository
+metadata:
+  name: leon1pbot
+  namespace: flux-system
+spec:
+  interval: 1m0s
+  url: oci://ghcr.io/kevinpita/charts/leon1pbot
+  # Highest published version. Pin a version here to roll back.
+  ref:
+    semver: "*"
+  # The package is private. This Secret is created by hand and is not in Git.
+  secretRef:
+    name: leon1pbot-ghcr
+  layerSelector:
+    mediaType: application/vnd.cncf.helm.chart.content.v1.tar+gzip
+    operation: copy
+---
+apiVersion: helm.toolkit.fluxcd.io/v2
+kind: HelmRelease
+metadata:
+  name: leon1pbot
+  namespace: flux-system
+spec:
+  interval: 10m0s
+  releaseName: leon1pbot
+  targetNamespace: leon1pbot
+  install:
+    createNamespace: true
+  driftDetection:
+    mode: enabled
+  chartRef:
+    kind: OCIRepository
+    name: leon1pbot

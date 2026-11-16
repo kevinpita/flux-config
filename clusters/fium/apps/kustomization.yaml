@@ -2,5 +2,6 @@ apiVersion: kustomize.config.k8s.io/v1beta1
 kind: Kustomization
 resources:
   - gasolinerabot.yaml
+  - leon1pbot.yaml
   - nec850.yaml
   - reelrelay.yaml
