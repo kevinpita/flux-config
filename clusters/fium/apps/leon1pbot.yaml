@@ -33,3 +33,8 @@ spec:
   chartRef:
     kind: OCIRepository
     name: leon1pbot
+  values:
+    telegram:
+      topics:
+        presentaciones: "44"
+        avisos: "46"
