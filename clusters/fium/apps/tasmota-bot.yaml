@@ -33,14 +33,14 @@ spec:
   values:
     device:
       firmware: tasmota
-      transport: http
-      url: "http://192.168.1.201"
+      transport: mqtt
     pollInterval: 10s
     timezone: Europe/Madrid
     mqtt:
+      topic: termo
       broker:
         # true deploys Mosquitto for the plug to connect to.
-        enabled: false
+        enabled: true
     backup:
       enabled: true
       hostPath: /seagate3x4/backup-k8s/tasmota-bot
