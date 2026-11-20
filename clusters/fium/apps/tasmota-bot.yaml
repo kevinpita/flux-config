@@ -1,0 +1,47 @@
+---
+apiVersion: source.toolkit.fluxcd.io/v1
+kind: OCIRepository
+metadata:
+  name: tasmota-bot
+  namespace: flux-system
+spec:
+  interval: 1m0s
+  url: oci://ghcr.io/kevinpita/charts/tasmota-bot
+  # Highest published version. Pin a version here to roll back.
+  ref:
+    semver: "*"
+  layerSelector:
+    mediaType: application/vnd.cncf.helm.chart.content.v1.tar+gzip
+    operation: copy
+---
+apiVersion: helm.toolkit.fluxcd.io/v2
+kind: HelmRelease
+metadata:
+  name: tasmota-bot
+  namespace: flux-system
+spec:
+  interval: 10m0s
+  releaseName: tasmota-bot
+  targetNamespace: tasmota-bot
+  install:
+    createNamespace: true
+  driftDetection:
+    mode: enabled
+  chartRef:
+    kind: OCIRepository
+    name: tasmota-bot
+  values:
+    device:
+      firmware: tasmota
+      transport: http
+      url: "http://192.168.1.201"
+    pollInterval: 10s
+    timezone: Europe/Madrid
+    mqtt:
+      broker:
+        # true deploys Mosquitto for the plug to connect to.
+        enabled: false
+    backup:
+      enabled: true
+      hostPath: /seagate3x4/backup-k8s/tasmota-bot
+      node: fium

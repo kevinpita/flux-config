@@ -23,6 +23,8 @@ The application's CI publishes an image and a chart with the same version on eve
 
 The packages of `leon1pbot` are also private. Its `OCIRepository` reads the Secret `leon1pbot-ghcr`. Its chart reads the Telegram token from the Secret `leon1pbot` and pulls the image with the Secret `ghcr`, both in the `leon1pbot` namespace. These Secrets are created by hand and are not in Git.
 
+The packages of `tasmota-bot` are public, so its `OCIRepository` needs no credentials. Its chart reads the Telegram token from the Secret `tasmota-bot` in the `tasmota-bot` namespace. This Secret is created by hand and is not in Git.
+
 Drift detection is enabled. Flux reverts manual changes to the resources of a chart on the next reconciliation.
 
 Removing an application file uninstalls its Helm release.

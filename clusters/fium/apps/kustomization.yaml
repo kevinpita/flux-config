@@ -5,3 +5,4 @@ resources:
   - leon1pbot.yaml
   - nec850.yaml
   - reelrelay.yaml
+  - tasmota-bot.yaml
