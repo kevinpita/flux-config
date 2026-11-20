@@ -44,6 +44,7 @@ All cluster configuration lives under `clusters/fium`:
 | `flux-system/reconciliation.yaml` | Reconciliation path, interval, and pruning settings. |
 | `apps/kustomization.yaml` | Lists the application files to apply. |
 | `apps/<name>.yaml` | Chart source and Helm release of one application. |
+| `matrix-notifier.yaml` | Read-only pod access for the Matrix notifier on the host. |
 
 ## Check the deployment
 

@@ -1,0 +1,41 @@
+# Read-only identity of the matrix-notifier service on the host. It lists the
+# pods and reports restarts, replaced pods, and image changes to Matrix.
+---
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: matrix-notifier
+  namespace: kube-system
+automountServiceAccountToken: false
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+  name: matrix-notifier-pod-reader
+rules:
+  - apiGroups: [""]
+    resources: [pods]
+    verbs: [list]
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRoleBinding
+metadata:
+  name: matrix-notifier-pod-reader
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: ClusterRole
+  name: matrix-notifier-pod-reader
+subjects:
+  - kind: ServiceAccount
+    name: matrix-notifier
+    namespace: kube-system
+---
+# Kubernetes fills in a token that does not expire. The host keeps a copy in sops.
+apiVersion: v1
+kind: Secret
+metadata:
+  name: matrix-notifier-token
+  namespace: kube-system
+  annotations:
+    kubernetes.io/service-account.name: matrix-notifier
+type: kubernetes.io/service-account-token
